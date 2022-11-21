@@ -1,4 +1,4 @@
-package com.example.sojha.splitwise.model.settlementstrategy;
+package com.example.sojha.splitwise.service.settlementstrategy;
 
 import com.example.sojha.splitwise.constant.ExpenseDistributionStatus;
 import com.example.sojha.splitwise.model.entity.ExpenseDistribution;

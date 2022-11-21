@@ -2,10 +2,9 @@ package com.example.sojha.splitwise.service;
 
 import com.example.sojha.splitwise.model.entity.*;
 import com.example.sojha.splitwise.model.request.expense.CreateExpense;
-import com.example.sojha.splitwise.model.settlementstrategy.SettlementStrategy;
+import com.example.sojha.splitwise.service.settlementstrategy.SettlementService;
 import com.example.sojha.splitwise.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +22,7 @@ public class ExpenseService {
     private UserService userService;
 
     @Autowired
-    @Qualifier("simple")
-    private SettlementStrategy settlementStrategy;
+    private SettlementService settlementService;
 
     public void createExpense(CreateExpense request) throws Exception {
         // Group is optional for a new expense
@@ -52,7 +50,7 @@ public class ExpenseService {
         }
 
         // Add settlements to expense
-        List<ExpenseSettlement> settlements = settlementStrategy.settle(expense.getDistributions());
+        List<ExpenseSettlement> settlements = settlementService.generateSettlements(expense.getDistributions());
         settlements.forEach(s -> expense.addSettlement(s));
 
         // Save expense.
