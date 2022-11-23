@@ -7,6 +7,7 @@ import com.example.sojha.splitwise.repository.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,10 @@ public class ExpenseService {
     @Autowired
     private SettlementService settlementService;
 
+    @Autowired
+    private BalanceService balanceService;
+
+    @Transactional(rollbackOn = {Exception.class})
     public void createExpense(CreateExpense request) throws Exception {
         // Group is optional for a new expense
         Optional<ExpenseGroup> groupOptional = groupService.findById(request.getGroupId());
@@ -55,5 +60,18 @@ public class ExpenseService {
 
         // Save expense.
         expenseRepository.save(expense);
+
+        // Update Balances
+        for (ExpenseSettlement s: settlements) {
+            Long newBalance = balanceService.addAmountToBalance(
+                    s.getPayer(),
+                    s.getPayee(),
+                    s.getAmount(),
+                    groupOptional.orElse(null)
+            );
+            System.out.println(
+                    String.format("Balance changed from %s to %s", newBalance-s.getAmount(), newBalance)
+            );
+        }
     }
 }

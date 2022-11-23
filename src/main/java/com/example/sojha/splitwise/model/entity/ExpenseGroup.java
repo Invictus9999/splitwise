@@ -27,4 +27,7 @@ public class ExpenseGroup {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
     private Set<Expense> expenses = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+    private Set<Balance> balances = new HashSet<>();
 }
