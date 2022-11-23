@@ -6,12 +6,13 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 public class CreateExpense {
     private String description;
     private Long amount;
-    private Long groupId;
+    private Optional<Long> groupId = Optional.empty();
     private List<Distribution> distributions = new ArrayList<>();
 
     @Data

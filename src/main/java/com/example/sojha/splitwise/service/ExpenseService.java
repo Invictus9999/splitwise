@@ -31,7 +31,10 @@ public class ExpenseService {
     @Transactional(rollbackOn = {Exception.class})
     public void createExpense(CreateExpense request) throws Exception {
         // Group is optional for a new expense
-        Optional<ExpenseGroup> groupOptional = groupService.findById(request.getGroupId());
+        Optional<ExpenseGroup> groupOptional = Optional.empty();
+        if (request.getGroupId().isPresent()) {
+            groupOptional = groupService.findById(request.getGroupId().get());
+        }
 
         // Create expense
         Expense expense = new Expense(request.getDescription(), request.getAmount(), groupOptional.orElse(null));
